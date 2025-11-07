@@ -43,9 +43,20 @@ export class AuthService {
 
   login(credentials: AuthRequestModel): Observable<AuthResponseModel> {
     return this.http.post<AuthResponseModel>(`${this.apiUrl}/login`, credentials).pipe(
+      tap((response) => {
+        this.setToken(response.token);
+
+        const userData: CurrentUserData = { email: response.email, rol: response.rol };
+        this.setUserData(userData);
+      })
+    );
+  }
+
+  register(data: AuthRequestModel): Observable<AuthResponseModel> {
+    return this.http.post<AuthResponseModel>(`${this.apiUrl}/register`, data).pipe(
       tap(response => {
         this.setToken(response.token)
-
+        
         const userData: CurrentUserData = {email: response.email, rol: response.rol}
         this.setUserData(userData);
       })
@@ -57,12 +68,12 @@ export class AuthService {
   }
 
   setUserData(data: CurrentUserData) {
-    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(data))
-    this.loggedInUser.set(data)
+    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(data));
+    this.loggedInUser.set(data);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY)
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   isLoggedIn(): boolean {
@@ -71,8 +82,8 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_DATA_KEY)
+    localStorage.removeItem(this.USER_DATA_KEY);
     this.loggedInUser.set(null);
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 }

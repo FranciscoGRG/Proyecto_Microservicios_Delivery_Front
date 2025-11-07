@@ -1,1 +1,86 @@
-<p>register works!</p>
+<div class="flex items-center justify-center min-h-screen bg-gray-50">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl">
+    
+    <h2 class="text-3xl font-extrabold text-center text-gray-900">Crear Cuenta</h2>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
+        <input id="name" type="text" formControlName="name"
+               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+               placeholder="Tu nombre">
+        @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+          <div class="text-red-500 text-xs mt-1">
+            <span>El nombre es obligatorio.</span>
+          </div>
+        }
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input id="email" type="email" formControlName="email"
+               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+               placeholder="tu.email@example.com">
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <div class="text-red-500 text-xs mt-1">
+            @if (registerForm.get('email')?.errors?.['required']) {
+              <span>El email es obligatorio.</span>
+            } @else if (registerForm.get('email')?.errors?.['email']) {
+              <span>El email no es válido.</span>
+            }
+          </div>
+        }
+      </div>
+      
+      <div>
+        <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
+        <input id="phone" type="tel" formControlName="phone"
+               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+               placeholder="Ej: 612345678">
+        @if (registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched) {
+          <div class="text-red-500 text-xs mt-1">
+            @if (registerForm.get('phone')?.errors?.['required']) {
+              <span>El teléfono es obligatorio.</span>
+            } @else if (registerForm.get('phone')?.errors?.['pattern']) {
+              <span>Formato de teléfono no válido (9 dígitos numéricos).</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+        <input id="password" type="password" formControlName="password"
+               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+               placeholder="Mínimo 6 caracteres">
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <div class="text-red-500 text-xs mt-1">
+            @if (registerForm.get('password')?.errors?.['required']) {
+              <span>La contraseña es obligatoria.</span>
+            } @else if (registerForm.get('password')?.errors?.['minlength']) {
+              <span>Mínimo 6 caracteres.</span>
+            }
+          </div>
+        }
+      </div>
+      
+      @if (errorMessage) {
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative text-sm" role="alert">
+          <span class="block sm:inline">{{ errorMessage }}</span>
+        </div>
+      }
+
+      <button type="submit" [disabled]="!registerForm.valid"
+              class="w-full flex justify-center py-3 px-4 border rounded-lg shadow-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+        Registrarse
+      </button>
+      
+    </form>
+    
+    <p class="text-center text-sm text-gray-600">
+      ¿Ya tienes cuenta? 
+      <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-150">Inicia sesión</a>
+    </p>
+  </div>
+</div>
