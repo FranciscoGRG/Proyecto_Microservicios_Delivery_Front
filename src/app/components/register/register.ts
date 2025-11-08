@@ -31,7 +31,6 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
-          this.authService.setToken(response.token)
           this.router.navigate(['/products'])
         },
         error: (error) => {

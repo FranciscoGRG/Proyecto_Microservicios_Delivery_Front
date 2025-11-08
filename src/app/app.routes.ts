@@ -2,9 +2,13 @@ import { Routes } from '@angular/router';
 import { LandingPageComponent } from './components/landing-page/landing-page';
 import { LoginComponent } from './components/login/login';
 import { RegisterComponent } from './components/register/register';
+import { ProductsComponent } from './components/products/products';
+import { AdminComponent } from './components/admin/admin';
 
 export const routes: Routes = [
     {path: '', component: LandingPageComponent, pathMatch: 'full'},
+    {path: 'products', component: ProductsComponent},
+    {path: 'admin', component: AdminComponent},
 
 
     {path: 'login', component: LoginComponent},

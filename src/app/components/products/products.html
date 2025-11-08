@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-gray-50 p-4 sm:p-8 font-sans">
+  <div class="max-w-7xl mx-auto">
+    
+    <header class="text-center mb-10 p-4">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700">
+        Catálogo de Productos Disponibles
+      </h1>
+      <p class="mt-3 text-xl text-gray-600">
+        Consulta todos los productos dinsponibles. Hay {{ products().length }} productos disponibles actualmente.
+      </p>
+    </header>
+
+    @if (loading()) {
+      <div class="flex flex-col justify-center items-center h-60">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-b-4 border-indigo-500 border-opacity-75"></div>
+        <p class="mt-4 text-indigo-500 font-medium text-lg">Cargando productos...</p>
+      </div>
+    }
+
+    @if (!loading() && products().length === 0) {
+      <div class="text-center p-10 bg-white rounded-xl shadow-lg border-t-4 border-red-500">
+        <h2 class="text-2xl font-semibold text-gray-700">No se encontraron productos</h2>
+        <p class="text-gray-500 mt-2">La lista está vacía o la conexión con el servidor falló.</p>
+      </div>
+    }
+
+    @if (products().length > 0) {
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        @for (product of products(); track product.id) {
+          <div class="travel-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-2xl transition duration-300">
+            
+            <!-- Título y Precio -->
+            <div class="flex flex-col mb-4">
+              <div class="flex justify-between items-start">
+                <h2 class="text-3xl font-bold text-gray-900 leading-tight">{{ product.name }}</h2>
+                <h2 class="text-3xl font-bold text-gray-900 leading-tight">{{ product.category }}</h2>
+                <div class="text-right ml-4">
+                    <!-- Formato de precio usando el pipe currency de CommonModule -->
+                    <span class="text-3xl font-extrabold text-green-600">
+                        {{ product.price | currency:'USD':'symbol':'1.0-2' }}
+                    </span>
+                    <p class="text-xs text-gray-400">Precio base</p>
+                </div>
+              </div>
+              <p class="text-base text-indigo-600 font-medium mt-1 flex items-center">
+                <!-- Icono de ubicación (Inline SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 fill-current" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 21.7c-3.7-.9-6.3-4-6.3-7.7A7 7 0 1 1 12 21.7z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {{ product.stock }}
+              </p>
+            </div>
+
+            <!-- Descripción (limitada a dos líneas) -->
+            <p class="text-gray-600 mb-6 text-sm h-14 overflow-hidden text-ellipsis">
+              {{ product.description }}
+            </p>
+
+            <!-- Botón de acción -->
+            <button [routerLink]="['product_details', product.id]" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-150 shadow-md hover:shadow-xl text-lg">
+              Ver Detalles
+            </button>
+
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</div>
