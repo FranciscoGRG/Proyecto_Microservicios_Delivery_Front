@@ -9,6 +9,7 @@ import { ProductRequest } from '../models/product-request';
 })
 export class ProductService {
   private apiUrl = 'http://localhost:8082/api/v1/products';
+  private readonly TOKEN_KEY = 'jwt_token';
   private http = inject(HttpClient)
 
   getProducts(): Observable<ProductModel[]> {
