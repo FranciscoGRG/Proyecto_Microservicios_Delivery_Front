@@ -5,14 +5,23 @@ import { RegisterComponent } from './components/register/register';
 import { ProductsComponent } from './components/products/products';
 import { AdminComponent } from './components/admin/admin';
 import { authGuardGuard } from './guards/auth-guard-guard';
+import { ProductEditComponent } from './components/product-edit/product-edit';
 
 export const routes: Routes = [
-    {path: '', component: LandingPageComponent, pathMatch: 'full'},
-    {path: 'products', component: ProductsComponent},
-    {path: 'admin', component: AdminComponent, canActivate: [authGuardGuard]},
+  { path: '', component: LandingPageComponent, pathMatch: 'full' },
+  { path: 'products', component: ProductsComponent },
 
+  {
+    path: 'admin',
+    canActivate: [authGuardGuard],
+    children: [
+      { path: '', component: AdminComponent },
+      { path: 'products/edit/:id', component: ProductEditComponent },
+      { path: 'products/new', component: ProductEditComponent},
+    ],
+  },
 
-    {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent},
-    {path: '**', redirectTo: ''}
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: '**', redirectTo: '' },
 ];
