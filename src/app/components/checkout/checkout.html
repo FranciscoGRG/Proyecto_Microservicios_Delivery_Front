@@ -1,0 +1,44 @@
+<div class="min-h-screen bg-gray-50 flex items-start justify-center p-4 sm:p-8">
+  <div class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-6 sm:p-8 space-y-6">
+    
+    <h1 class="text-3xl font-extrabold text-gray-900 border-b pb-3 mb-4">Finalizar Compra</h1>
+    
+    <div class="flex justify-between items-center bg-blue-50 p-4 rounded-lg">
+      <p class="text-lg font-semibold text-gray-700">Total a Pagar:</p>
+      <p class="text-2xl font-bold text-blue-800">{{ carTotal$ | async | currency:'EUR':'symbol':'1.2-2' }}</p>
+    </div>
+
+    <form (submit)="initiateTokenization($event)" class="space-y-6">
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Datos de la Tarjeta</label>
+        <div id="card-element" class="p-3 border border-gray-300 rounded-lg focus-within:border-blue-500 transition shadow-sm">
+          </div>
+      </div>
+      
+      @if (paymentError()) {
+        <div class="p-4 bg-red-100 text-red-700 rounded-lg text-sm font-medium border border-red-300" role="alert">
+          {{ paymentError() }}
+        </div>
+      }
+
+      <button
+        type="submit"
+        class="w-full py-3 mt-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+        [disabled]="!stripe || isLoading() || (carTotal$ | async) === 0"
+      >
+        @if (isLoading()) {
+          <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Procesando Pago...</span>
+        } @else {
+          <span>Pagar {{ carTotal$ | async | currency:'EUR':'symbol':'1.2-2' }}</span>
+        }
+      </button>
+      
+      <p class="text-xs text-gray-500 text-center pt-2">Pagos procesados de forma segura por Stripe.</p>
+    </form>
+  </div>
+</div>
