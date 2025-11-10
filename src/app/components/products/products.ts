@@ -2,11 +2,13 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ProductModel } from '../../models/product-model';
 import { ProductService } from '../../services/product-service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { CartService } from '../../services/cart-service';
+import { CartItem } from '../../models/cart-item';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-products',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './products.html',
 })
 export class ProductsComponent implements OnInit {
@@ -14,6 +16,7 @@ export class ProductsComponent implements OnInit {
   loading = signal(true);
 
   private service = inject(ProductService);
+  private cartService = inject(CartService);
 
   ngOnInit(): void {
     this.service.getProducts().subscribe({
@@ -27,6 +30,29 @@ export class ProductsComponent implements OnInit {
         this.loading.set(false);
       }
     })
+  }
+
+  addToCart(product: ProductModel): void {
+    const newItem: CartItem = {
+      productId: product.id,
+      quantity: 1,
+      priceAtOrder: product.price,
+      name: product.name
+    }
+
+    this.cartService.addItem(newItem);
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Añadido!',
+      text: `${product.name} ha sido añadido al carrito.`,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 1500
+    });
+
+    console.log(this.cartService.getCartItems())
   }
 
 }

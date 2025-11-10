@@ -57,8 +57,8 @@
             </p>
 
             <!-- Botón de acción -->
-            <button [routerLink]="['product_details', product.id]" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-150 shadow-md hover:shadow-xl text-lg">
-              Ver Detalles
+            <button (click)="addToCart(product)" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-150 shadow-md hover:shadow-xl text-lg">
+              Añadir al carrito
             </button>
 
           </div>

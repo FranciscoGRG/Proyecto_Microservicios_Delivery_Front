@@ -160,8 +160,7 @@
               @for (item of order.items; track $index) {
               <li>
                 Producto ID: <strong>{{ item.productId }}</strong> — Cant: {{ item.quantity }} ×
-                {{ item.priceAtOrder | currency }} =
-                <strong>{{ item.subtotal | currency }}</strong>
+                <strong>{{ item.priceAtOrder | currency }}</strong>
               </li>
               } @empty {
               <li class="text-gray-500 italic">No hay ítems asociados a esta orden.</li>
