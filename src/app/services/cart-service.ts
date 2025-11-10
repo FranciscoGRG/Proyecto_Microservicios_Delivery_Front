@@ -22,8 +22,9 @@ export class CartService {
     if (storedCart) {
       try {
         const items: CartItem[] = JSON.parse(storedCart);
+        this.cartSubject.next(items);
       } catch (error) {
-        console.error("Error al hacer json parse al carrito: ", error)
+        console.error('Error al hacer json parse al carrito: ', error);
         localStorage.removeItem(CART_KEY);
         this.cartSubject.next([]);
       }
@@ -35,7 +36,7 @@ export class CartService {
   public saveCart(): Observable<void> {
     const currentCart = this.cartSubject.getValue();
 
-    localStorage.setItem(CART_KEY, JSON.stringify(currentCart))
+    localStorage.setItem(CART_KEY, JSON.stringify(currentCart));
 
     return of(undefined);
   }
@@ -47,12 +48,12 @@ export class CartService {
   addItem(newItem: CartItem): void {
     const currentCart = this.getCartItems();
 
-    const existingItem = currentCart.find(item => item.productId === newItem.productId);
+    const existingItem = currentCart.find((item) => item.productId === newItem.productId);
 
     if (existingItem) {
-    existingItem.quantity += newItem.quantity;
+      existingItem.quantity += newItem.quantity;
 
-    if (existingItem.quantity < 1) existingItem.quantity = 1;
+      if (existingItem.quantity < 1) existingItem.quantity = 1;
     } else {
       currentCart.push(newItem);
     }
@@ -61,10 +62,27 @@ export class CartService {
     this.saveCart();
   }
 
+  updateItemQuantity(productId: string, quantity: number): void {
+    let currentCart = this.getCartItems();
+
+    const newQuantity = Math.max(1, quantity)
+
+    const existingItem = currentCart.find((item) => item.productId === productId);
+
+    if (existingItem) {
+      existingItem.quantity = newQuantity;
+      this.cartSubject.next(currentCart);
+
+      this.saveCart();
+    } else {
+      console.error("No se ha podido actualizar la cantidad de items");
+    }
+  }
+
   removeItem(productId: string): void {
     const currentCart = this.getCartItems();
 
-    const updatedCart = currentCart.filter(item => item.productId !== productId);
+    const updatedCart = currentCart.filter((item) => item.productId !== productId);
 
     this.cartSubject.next(updatedCart);
     this.saveCart();
@@ -80,13 +98,11 @@ export class CartService {
 
   getTotalPrice(): Observable<number> {
     return this.cart$.pipe(
-      map(items => items.reduce((total, item) => total + (item.priceAtOrder * item.quantity), 0))
-    )
-  };
+      map((items) => items.reduce((total, item) => total + item.priceAtOrder * item.quantity, 0))
+    );
+  }
 
   getTotalItemsCount(): Observable<number> {
-    return this.cart$.pipe( map(
-      items => items.length
-    ))
+    return this.cart$.pipe(map((items) => items.length));
   }
 }
